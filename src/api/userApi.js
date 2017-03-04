@@ -8,10 +8,22 @@ export function getUsers() {
 }
 
 function get(url) {
-  return fetch(baseUrl + url).then(onSucess, onError);
+  return fetch(baseUrl + url).then(onSuccess, onError);
 }
 
-function onSucess(response) {
+export function deleteUser(id) {
+  return onDelete(`users/${id}`);
+}
+
+function onDelete(url) {
+  const request = new Request(baseUrl + url, {
+    method: 'DELETE'
+  });
+
+  return fetch(request).then(onSuccess, onError);
+}
+
+function onSuccess(response) {
   return response.json();
 }
 
