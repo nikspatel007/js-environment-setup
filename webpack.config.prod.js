@@ -1,6 +1,8 @@
 import path from 'path';
 import webpack from 'webpack';
 import HtmlwebpackPlugin from 'html-webpack-plugin';
+import WebpackMd5Hash from 'webpack-md5-hash';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 export default {
   debug: true,
@@ -13,9 +15,13 @@ export default {
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
-    filename: 'bundle.js'
+    filename: '[name].[chunkhash].js'
   },
   plugins: [
+    //Generate an external css file with a hash in the fileName.
+    new ExtractTextPlugin('[name].[contenthash].css'),
+    //Hashthe the files using MD5 so that their names change when the content changes.
+    new WebpackMd5Hash(),
     //Create HTML file that includes refernce to bundled JS.
     new HtmlwebpackPlugin({
       template: 'src/index.html',
@@ -46,7 +52,7 @@ export default {
       },
       {
         test: /\.css$/,
-        loaders: ['style', 'css']
+        loader: ExtractTextPlugin.extract('css?sourceMap')
       }
     ]
   }
